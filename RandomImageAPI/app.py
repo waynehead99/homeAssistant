@@ -32,5 +32,5 @@ def random_image():
         return "No image available"
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0') #important to do this if you are using a docker so that you can access it
 
