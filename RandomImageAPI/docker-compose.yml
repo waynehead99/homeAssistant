@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - nfs-volume:/mnt/nfs
+    environment:
+      - NFS_SERVER=10.0.248.214
+      - NFS_PATH=/mnt/nas/data/Pictures/Pictures/remoteshare
+
+volumes:
+  nfs-volume:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=10.0.248.214,nolock,soft,rw
+      device: ":/mnt/nas/data/Pictures/Pictures/remoteshare"
