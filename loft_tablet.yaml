@@ -1,0 +1,245 @@
+wallpanel:
+  enabled: true
+  hide_sidebar: true
+  hide_toolbar: true
+  fullscreen: true
+  idle_time: 15
+  image_url: http://10.0.254.202:5000/random-image
+  image_fit: 100%
+  card_interaction: true
+  style:
+    wallpanel-screensaver-info-box:
+      '--wp-card-width': 450px
+      background-color: '#00000099'
+      box-shadow: >-
+        0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0,
+        0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12)
+    wallpanel-screensaver-info-box-content:
+      '--ha-card-background': none
+      '--ha-card-box-shadow': none
+      '--ha-card-border-width': 0px
+      '--primary-background-color': '#111111'
+      '--secondary-background-color': '#202020'
+      '--primary-text-color': '#e1e1e1'
+      '--secondary-text-color': '#9b9b9b'
+  cards:
+    - type: custom:digital-clock
+      wp_style:
+        width: 400px
+        grid-row: 1
+        grid-column: 1
+    - show_current: true
+      show_forecast: false
+      type: weather-forecast
+      entity: weather.openweathermap
+      name: Aurora, Co
+      wp_style:
+        width: 400px
+        grid-row: 2
+        grid-column: 1
+    - type: conditional
+      conditions:
+        - entity: media_player.jesus_room_echo
+          state: playing
+      card:
+        type: media-control
+        entity: media_player.jesus_room_echo
+views:
+  - theme: noctis-solarized
+    title: Home
+    type: custom:grid-layout
+    badges: []
+    cards:
+      - type: horizontal-stack
+        cards:
+          - type: conditional
+            conditions:
+              - entity: media_player.jesus_room_echo
+                state_not: standby
+            card:
+              type: custom:mushroom-media-player-card
+              entity: media_player.jesus_room_echo
+              icon_type: entity-picture
+              use_media_info: true
+              media_controls:
+                - on_off
+              fill_container: false
+              layout: horizontal
+          - type: custom:mushroom-title-card
+            title: '{{states(''sensor.date_and_time'')}}'
+            alignment: end
+      - type: horizontal-stack
+        cards:
+          - type: vertical-stack
+            cards:
+              - type: custom:weather-card
+                entity: weather.openweathermap
+                number_of_forecasts: '5'
+                hourly_forecast: false
+                forecast: false
+                name: Aurora
+                details: false
+              - type: horizontal-stack
+                cards:
+                  - graph: line
+                    type: sensor
+                    detail: 1
+                    entity: sensor.jesusroom_temperature
+                    name: Room Temperature
+                  - graph: line
+                    type: sensor
+                    detail: 1
+                    entity: sensor.jesusroom_humidity
+                    name: Room Humidity
+          - type: vertical-stack
+            cards:
+              - type: custom:slider-button-card
+                entity: light.table_lamps_2
+                slider:
+                  direction: left-right
+                  background: gradient
+                  use_state_color: true
+                  use_percentage_bg_opacity: false
+                  show_track: false
+                  toggle_on_click: false
+                  force_square: false
+                show_name: true
+                show_state: true
+                compact: true
+                icon:
+                  show: true
+                  use_state_color: true
+                  tap_action:
+                    action: more-info
+                  icon: ''
+                action_button:
+                  mode: toggle
+                  icon: mdi:power
+                  show: true
+                  show_spinner: true
+                  tap_action:
+                    action: toggle
+                name: Table Lamps
+              - type: custom:slider-button-card
+                entity: light.shelby_desknew
+                slider:
+                  direction: left-right
+                  background: gradient
+                  use_state_color: true
+                  use_percentage_bg_opacity: false
+                  show_track: false
+                  toggle_on_click: false
+                  force_square: false
+                show_name: true
+                show_state: true
+                compact: true
+                icon:
+                  show: true
+                  use_state_color: true
+                  tap_action:
+                    action: more-info
+                  icon: ''
+                action_button:
+                  mode: toggle
+                  icon: mdi:power
+                  show: true
+                  show_spinner: true
+                  tap_action:
+                    action: toggle
+                name: Desk Lamps
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-template-card
+                    primary: Bookshelf
+                    secondary: ''
+                    icon: mdi:bookshelf
+                    entity: switch.bookshelf
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: none
+                    double_tap_action:
+                      action: none
+                    fill_container: true
+                    layout: vertical
+                    icon_color: |-
+                      {% if is_state('switch.bookshelf', 'on') %}
+                        orange
+                      {% endif %}
+                  - type: custom:mushroom-template-card
+                    primary: Standing Lamp
+                    secondary: ''
+                    icon: mdi:post-lamp
+                    entity: switch.standing_lamp_2
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: none
+                    double_tap_action:
+                      action: none
+                    fill_container: true
+                    layout: vertical
+                    icon_color: |-
+                      {% if is_state('switch.standing_lamp_2', 'on') %}
+                        orange
+                      {% endif %}
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: scene.loft_all_on
+            name: All On
+            layout: vertical
+            fill_container: true
+            icon_color: red
+            tap_action:
+              action: call-service
+              service: scene.turn_on
+              data: {}
+              target:
+                entity_id: scene.loft_all_on
+            secondary_info: none
+          - type: custom:mushroom-entity-card
+            entity: scene.loft_desk_study
+            name: 'Desk '
+            fill_container: true
+            layout: vertical
+            icon_color: red
+            secondary_info: none
+            tap_action:
+              action: call-service
+              service: scene.turn_on
+              data: {}
+              target:
+                entity_id: scene.loft_desk_study
+          - type: custom:mushroom-entity-card
+            entity: scene.loft_chair_study
+            fill_container: true
+            layout: vertical
+            icon_color: red
+            secondary_info: none
+            name: Chair
+            tap_action:
+              action: call-service
+              service: scene.turn_on
+              data: {}
+              target:
+                entity_id: scene.loft_chair_study
+          - type: custom:mushroom-entity-card
+            entity: scene.loft_all_off
+            layout: vertical
+            fill_container: true
+            secondary_info: none
+            icon_color: red
+            name: All Off
+            tap_action:
+              action: call-service
+              service: scene.turn_on
+              data: {}
+              target:
+                entity_id: scene.loft_all_off
+  - theme: Mushroom
+    title: Scratcg
+    path: scratcg
+    type: panel
+    badges: []
+    cards: []
